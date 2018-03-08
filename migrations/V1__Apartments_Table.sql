@@ -1,4 +1,4 @@
-\c `flat_box`;
+\c flat_box;
 
 CREATE TABLE apartments (
   id serial NOT NULL,

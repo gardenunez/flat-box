@@ -5,7 +5,7 @@ shell: build
 	docker-compose build
 
 run: build
-	docker-compose run api
+	docker-compose run --rm api
 
 clean:
 	docker-compose stop && docker-compose rm -f
