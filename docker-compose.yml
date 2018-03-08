@@ -1,0 +1,13 @@
+version: "2"
+services:
+  flat_box_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /code
+    command: "/bin/true"
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+    command: "/bin/true"
