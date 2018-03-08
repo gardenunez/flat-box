@@ -5,7 +5,7 @@ shell: build
 	docker-compose build
 
 run: build
-	docker-compose run api bash -c 'FLASK_APP=app.py flask run'
+	docker-compose run api
 
 clean:
 	docker-compose stop && docker-compose rm -f

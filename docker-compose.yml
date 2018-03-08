@@ -5,12 +5,16 @@ services:
       context: .
       dockerfile: Dockerfile
     working_dir: /code
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=flat_box
     command: "/bin/true"
     ports:
       - "5000:5000"
     volumes:
       - .:/code
-    command: "/bin/true"
+    command: "python app.py"
     depends_on:
       - db
     links:
