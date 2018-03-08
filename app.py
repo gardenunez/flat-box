@@ -1,9 +1,18 @@
 from flask import Flask
-app = Flask(__name__)
+from flat_box_encoder import FlatBoxJsonEncoder
 
+app = Flask(__name__)
+app.json_encoder = FlatBoxJsonEncoder
+
+
+from apartments import get_apartments
+from db import PostgresDb
+from flask import jsonify
+CONNECTION_STR = 'postgresql://postgres:postgres@db/postgres'
 @app.route("/")
 def hello():
-    return "Hello World!"
+    db = PostgresDb(connection_str=CONNECTION_STR)
+    return jsonify(get_apartments(db))
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, use_reloader=True)
