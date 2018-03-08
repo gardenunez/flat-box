@@ -2,10 +2,10 @@
 build:
 	docker-compose build
 shell: build
-	docker-compose run --rm --service-ports flat_box_api /bin/bash
+	docker-compose build
 
-test: build
-	docker-compose run --rm flat_box_api bash -c 'FLASK_APP=app.py flask run'
+run: build
+	docker-compose run api bash -c 'FLASK_APP=app.py flask run'
 
 clean:
 	docker-compose stop && docker-compose rm -f

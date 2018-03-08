@@ -1,6 +1,6 @@
 version: "2"
 services:
-  flat_box_api:
+  api:
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,3 +11,15 @@ services:
     volumes:
       - .:/code
     command: "/bin/true"
+    depends_on:
+      - db
+    links:
+      - db
+  db:
+    image: postgres:10.3
+    volumes:
+      - ./migrations/V1__Apartments_Table.sql:/docker-entrypoint-initdb.d/V1__Apartments_Table.sql
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=flat_box
