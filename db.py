@@ -1,42 +1,58 @@
 import psycopg2
+from psycopg2.extras import DictCursor
+
 
 class PostgresDb:
 
-    def __init__(self, connection_str):
+    def __init__(self, connection_str, adapter=None):
+        if not adapter:
+            self.adapter = psycopg2
+        else:
+            self.adapter = adapter
         self.connection_str = connection_str
-        self.connection = None
-        self.connected = False
+        self.db_connection = None
+        self._connected = False
 
-    def execute(self, db_query, params=None, disconnect=True):
-        if not self.connected:
+    def execute_query(self, query, params=None, disconnect=True, dict_cursor=False):
+        params = params or ()
+        if not self._connected:
             self._connect()
-        result = None
         try:
-            result = self._run(db_query, params)
-        except psycopg2.Error as e:
-            raise
-        finally:
-            if disconnect:
-                self.disconnect()
-        return result
-
-    def _run(self, query, params=None):
-        if not params:
-            params = ()
-        with self.connection:
-            with self.connection.cursor() as cursor:
+            if dict_cursor:
+                cursor = self.db_connection.cursor(cursor_factory=DictCursor)
+            else:
+                cursor = self.db_connection.cursor()
+            with self.db_connection:
                 cursor.execute(query, params)
-                if query.strip().upper().startswith('SELECT'):
-                    query_result = cursor.fetchall()
-                else:
-                    query_result = True
+                return cursor.fetchall()
+        finally:
+            if cursor:
+                cursor.close()
+            if disconnect:
+                self._disconnect()
 
-            return query_result
+    def execute_non_query(self, query, params=None, disconnect=True):
+        params = params or ()
+        if not self._connected:
+            self._connect()
+        try:
+            cursor = self.db_connection.cursor()
+            with self.db_connection:
+                cursor.execute(query, params)
+        finally:
+            if cursor:
+                cursor.close()
+            if disconnect:
+                self._disconnect()
+
+    def run_scalar(self, query, params=None, disconnect=True):
+        results = self.execute_query(query, params, disconnect)
+        return results[0][0]
 
     def _connect(self):
-        if not self.connection or self.connection.closed:
-            self.connection = psycopg2.connect(self.connection_str)
+        self.db_connection = self.adapter.connect(self.connection_str)
+        self._connected = True
 
-    def disconnect(self):
-        self.connection.close()
-        self.connected = False
+    def _disconnect(self):
+        self.db_connection.close()
+        self._connected = False
