@@ -1,10 +1,10 @@
-import psycopg2
-from db import PostgresDb
 from decimal import Decimal
 
+from db import PostgresDb
 
 CONNECTION_STR = 'postgresql://postgres:postgres@db/postgres'
 DB = PostgresDb(connection_str=CONNECTION_STR)
+
 
 def get_apartments(db=DB, longitude=None, latitude=None, side=None, rooms=None, area=None):
     if None in (longitude, latitude, side, rooms, area):
@@ -17,10 +17,12 @@ def get_apartments(db=DB, longitude=None, latitude=None, side=None, rooms=None, 
         area = Decimal(area)
         return get_bounding_box_apartments(db, longitude, latitude, side, rooms, area)
 
+
 def get_default_apartments(db):
     results = db.execute_query("SELECT lat, lon, rooms, area FROM apartments limit 10",
-                                dict_cursor=True)
+                               dict_cursor=True)
     return [dict(record) for record in results]
+
 
 def load_apartments(db=DB):
     return db.execute_non_query("INSERT INTO apartments(lat, lon, rooms, area) \
@@ -42,11 +44,11 @@ def get_bounding_box_apartments(db, longitude, latitude, side, rooms, area):
             AND (%(area)s - %(area_percentage)s <= a.area AND \
                 a.area <= %(area)s + %(area_percentage)s) "
     results = db.execute_query(query,
-                            params={'latitude': latitude,
-                                    'longitude': longitude,
-                                    'half_side': side/2,
-                                    'rooms': rooms,
-                                    'area': area,
-                                    'area_percentage': area/5},
-                            dict_cursor=True)
+                               params={'latitude': latitude,
+                                       'longitude': longitude,
+                                       'half_side': side / 2,
+                                       'rooms': rooms,
+                                       'area': area,
+                                       'area_percentage': area / 5},
+                               dict_cursor=True)
     return [dict(record) for record in results]
