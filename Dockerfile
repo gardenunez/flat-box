@@ -1,6 +1,6 @@
 FROM python:3.6
 
-RUN apt-get update
+RUN apt-get update && apt-get install postgresql-client-9.4 -y
 
 ARG uid=1000
 ARG gid=1000

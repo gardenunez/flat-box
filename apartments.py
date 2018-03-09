@@ -2,7 +2,8 @@ from decimal import Decimal
 
 from db import PostgresDb
 
-CONNECTION_STR = 'postgresql://postgres:postgres@db/postgres'
+# TODO: move to environmnet variable
+CONNECTION_STR = 'postgresql://postgres:postgres@db/flat_box'
 DB = PostgresDb(connection_str=CONNECTION_STR)
 
 
