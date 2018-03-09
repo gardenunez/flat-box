@@ -18,7 +18,16 @@ def handle_invalid_usage(exception):
 
 @app.route("/apartments", methods=['GET'])
 def list_apartments():
-    return jsonify(get_apartments())
+    longitude = request.args.get('lo')
+    latitude = request.args.get('la')
+    side = request.args.get('s')
+    rooms = request.args.get('r')
+    area = request.args.get('a')
+    return jsonify(get_apartments(longitude=longitude,
+                                  latitude=latitude,
+                                  side=side,
+                                  rooms=rooms,
+                                  area=area))
 
 @app.route("/", methods=['POST'])
 def load():
