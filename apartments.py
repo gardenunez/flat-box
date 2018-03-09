@@ -10,6 +10,7 @@ def get_apartments(db=DB, longitude=None, latitude=None, side=None, rooms=None, 
     if None in (longitude, latitude, side, rooms, area):
         return get_default_apartments(db)
     else:
+        # TODO: refactor this.
         longitude = Decimal(longitude)
         latitude = Decimal(latitude)
         side = int(side)
