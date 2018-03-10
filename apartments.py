@@ -1,6 +1,8 @@
-from decimal import Decimal
-
 import os
+from decimal import Decimal
+from io import BytesIO
+
+from reportlab.pdfgen import canvas
 
 from db import PostgresDb
 
@@ -58,3 +60,12 @@ def format_apartments_to_csv(apartments):
     for ap in apartments:
         lines = f"{lines}\n{ap['lon']},{ap['lat']},{ap['rooms']},{ap['area']}"
     return f"{header}{lines}"
+
+def format_apartments_to_pdf(apartments):
+    with BytesIO() as buffer:
+        p = canvas.Canvas(buffer)
+        for row, ap in enumerate(apartments):
+            p.drawString(10, row + 10, "longitude: {lon}, latitude: {lat}, rooms: {rooms}, area: {area}".format(**ap))
+        p.save()
+        pdf_out = buffer.getvalue()
+        return pdf_out

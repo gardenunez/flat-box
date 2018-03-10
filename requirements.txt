@@ -1,5 +1,6 @@
 Flask==0.12.2
 psycopg2==2.7.3
+reportlab
 # TODO: move to a different requirements file
 mamba==0.9.3
 doublex==1.8.2

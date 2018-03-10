@@ -94,3 +94,9 @@ with description("App spec"):
                                        headers={'Accept': 'application/pdf'})
             expect(response.status_code).to(equal(200))
             expect(response.mimetype).to(equal('application/pdf'))
+
+        with it("returns unsupported media type if so"):
+            response = self.client.get('/apartments',
+                                       headers={'Accept': 'invalid/mimetype'})
+            expect(response.status_code).to(equal(415))
+            expect(response.get_data().decode()).to(equal('Unsupported Media Type'))

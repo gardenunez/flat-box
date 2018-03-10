@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, make_response, request, Response
 
-from apartments import get_apartments, load_apartments, format_apartments_to_csv
+from apartments import get_apartments, load_apartments, format_apartments_to_csv, format_apartments_to_pdf
 from flat_box_encoder import FlatBoxJsonEncoder
 from logger import get_logger
 
@@ -30,24 +30,24 @@ def list_apartments():
     rooms = request.args.get('r')
     area = request.args.get('a')
     accept_header = request.headers.get('Accept')
-    apartments = get_apartments(longitude=longitude, latitude=latitude,
-                                      side=side, rooms=rooms, area=area)
+    apartments = get_apartments(longitude=longitude, latitude=latitude, side=side, rooms=rooms, area=area)
+    # TODO: support several mimetypes in the header and also things like application/* ...
     if not accept_header or accept_header == 'application/json':
         return jsonify(apartments)
     if accept_header == 'text/csv':
         csv_text = format_apartments_to_csv(apartments)
-        return Response(
-            csv_text,
-            mimetype="text/csv",
-            headers={"Content-disposition": "attachment; filename=apartments.csv"})
+        return Response(csv_text, mimetype="text/csv",
+                        headers={"Content-disposition": "attachment; filename=apartments.csv"})
 
     if accept_header == 'application/pdf':
-        return Response(
-            'pdf_file',
-            mimetype="application/pdf",
-            headers={"Content-disposition": "attachment; filename=apartments.pdf"})
+        pdf = format_apartments_to_pdf(apartments)
+        response = make_response(pdf)
+        response.headers['Content-Disposition'] = "attachment; filename='apartments.pdf"
+        response.mimetype = 'application/pdf'
+        return response
 
-    return jsonify(apartments)
+    return Response('Unsupported Media Type', status=415)
+
 
 @app.route("/apartments", methods=['POST'])
 def load():
