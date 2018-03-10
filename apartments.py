@@ -1,9 +1,11 @@
 from decimal import Decimal
 
+import os
+
 from db import PostgresDb
 
-# TODO: move to environmnet variable
-CONNECTION_STR = 'postgresql://postgres:postgres@db/flat_box'
+# TODO: move to environment variable
+CONNECTION_STR = os.environ.get('DATABASE_URL', 'postgresql://postgres:postgres@db/flat_box')
 DB = PostgresDb(connection_str=CONNECTION_STR)
 
 
