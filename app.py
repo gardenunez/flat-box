@@ -16,6 +16,11 @@ def handle_invalid_usage(exception):
     return make_response(jsonify({'error': str(exception)}), 500)
 
 
+@app.route("/", methods=['GET'])
+def hello():
+    return jsonify({'hello': 'world'})
+
+
 @app.route("/apartments", methods=['GET'])
 def list_apartments():
     # TODO: no validations are all
@@ -37,4 +42,4 @@ def load():
     return make_response(jsonify(), 201)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, use_reloader=True)
+    app.run(host='0.0.0.0')
