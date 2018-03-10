@@ -35,16 +35,11 @@ def load_apartments(db=DB):
 def get_bounding_box_apartments(db, longitude, latitude, side, rooms, area):
     query = "SELECT lat, lon, rooms, area \
             FROM apartments a \
-            WHERE ( \
-                   ((%(latitude)s - %(half_side)s) < a.lat \
-                    OR a.lat < (%(latitude)s + %(half_side)s)) \
-                    AND \
-                   ((%(longitude)s - %(half_side)s) < a.lat \
-                    OR a.lat < (%(longitude)s + %(half_side)s)) \
-                ) \
-            AND (%(rooms)s - 1 <= a.rooms AND a.rooms <= %(rooms)s + 1) \
-            AND (%(area)s - %(area_percentage)s <= a.area AND \
-                a.area <= %(area)s + %(area_percentage)s) "
+            WHERE " \
+            "(%(latitude)s - %(half_side)s) <= a.lat AND a.lat <= (%(latitude)s + %(half_side)s) " \
+            "AND ( (%(longitude)s - %(half_side)s) <= a.lon AND a.lon <= (%(longitude)s + %(half_side)s)) " \
+            "AND (%(rooms)s - 1 <= a.rooms AND a.rooms <= %(rooms)s + 1) " \
+            "AND (%(area)s - %(area_percentage)s <= a.area AND a.area <= %(area)s + %(area_percentage)s) "
     results = db.execute_query(query,
                                params={'latitude': latitude,
                                        'longitude': longitude,
