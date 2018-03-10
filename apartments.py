@@ -51,3 +51,10 @@ def get_bounding_box_apartments(db, longitude, latitude, side, rooms, area):
                                        'area_percentage': area / 5},
                                dict_cursor=True)
     return [dict(record) for record in results]
+
+def format_apartments_to_csv(apartments):
+    header = "longitude,latitude,rooms,area"
+    lines = ""
+    for ap in apartments:
+        lines = f"{lines}\n{ap['lon']},{ap['lat']},{ap['rooms']},{ap['area']}"
+    return f"{header}{lines}"

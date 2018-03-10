@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, make_response, request, Response
 
-from apartments import get_apartments, load_apartments
+from apartments import get_apartments, load_apartments, format_apartments_to_csv
 from flat_box_encoder import FlatBoxJsonEncoder
 from logger import get_logger
 
@@ -31,13 +31,13 @@ def list_apartments():
     area = request.args.get('a')
     accept_header = request.headers.get('Accept')
     apartments = get_apartments(longitude=longitude, latitude=latitude,
-                                side=side, rooms=rooms, area=area)
+                                      side=side, rooms=rooms, area=area)
     if not accept_header or accept_header == 'application/json':
         return jsonify(apartments)
     if accept_header == 'text/csv':
-        csv = '1,2,3\n4,5,6\n'
+        csv_text = format_apartments_to_csv(apartments)
         return Response(
-            csv,
+            csv_text,
             mimetype="text/csv",
             headers={"Content-disposition": "attachment; filename=apartments.csv"})
 
@@ -47,11 +47,12 @@ def list_apartments():
             mimetype="application/pdf",
             headers={"Content-disposition": "attachment; filename=apartments.pdf"})
 
+    return jsonify(apartments)
 
-@app.route("/", methods=['POST'])
+@app.route("/apartments", methods=['POST'])
 def load():
     load_apartments()
     return make_response(jsonify(), 201)
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', use_reloader=True)

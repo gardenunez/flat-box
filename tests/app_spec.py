@@ -65,27 +65,32 @@ with description("App spec"):
             apartments = json.loads(response.get_data().decode())
             expect(apartments).to(have_len(1))
             expect(apartments[0]['area']).to(equal('60'))
+
     with context("When handling content negotiation"):
 
         with it("returns json by default"):
-            response = self.client.get('/apartments?la=1&lo=0&s=2&r=2&a=70')
+            response = self.client.get('/apartments')
             expect(response.status_code).to(equal(200))
             expect(response.mimetype).to(equal('application/json'))
 
         with it("returns json if 'application/json'"):
-            response = self.client.get('/apartments?la=1&lo=0&s=2&r=2&a=70',
+            response = self.client.get('/apartments',
                                        headers={'Accept': 'application/json'})
             expect(response.status_code).to(equal(200))
             expect(response.mimetype).to(equal('application/json'))
 
         with it("returns csv if 'text/csv'"):
-            response = self.client.get('/apartments?la=1&lo=0&s=2&r=2&a=70',
+            response = self.client.get('/apartments',
                                        headers={'Accept': 'text/csv'})
             expect(response.status_code).to(equal(200))
             expect(response.mimetype).to(equal('text/csv'))
+            data = response.get_data().decode()
+            lines = data.split('\n')
+            expect(lines[0]).to(equal("longitude,latitude,rooms,area"))
+            expect(lines[1:]).to(have_len(4))
 
         with it("returns pdf if 'application/pdf'"):
-            response = self.client.get('/apartments?la=1&lo=0&s=2&r=2&a=70',
+            response = self.client.get('/apartments',
                                        headers={'Accept': 'application/pdf'})
             expect(response.status_code).to(equal(200))
             expect(response.mimetype).to(equal('application/pdf'))
