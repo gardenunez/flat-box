@@ -8,7 +8,7 @@ RUN pip install -r /requirements.txt
 ENV PYTHONPATH=/opt/webapp
 
 # add app code
-ADD ./webapp /opt/webapp/
+COPY ./webapp /opt/webapp/
 WORKDIR /opt/webapp
 
 # Run the image as a non-root user
