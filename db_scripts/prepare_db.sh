@@ -32,6 +32,6 @@ echo "Postgres is ready"
 PGPASSWORD=postgres createdb $DBNAME -h db -U postgres -O postgres -w || true
 
 ## uncomment if data is needed
-psql postgresql://postgres:postgres@db/flat_box -f ./migrations/V1__Apartments_Table.sql
+psql postgresql://postgres:postgres@db/flat_box -f ./db_scripts/init.sql
 
 echo "Data is loaded"

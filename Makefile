@@ -9,7 +9,7 @@ run: build
 	docker-compose up
 
 test: build
-	docker-compose run --rm web bash -c "./prepare_db.sh && mamba tests -f documentation"
+	docker-compose run --rm web bash -c "./db_scripts/prepare_db.sh && mamba tests -f documentation"
 
 create-heroku-app: build
 	heroku create flat-box --region eu
@@ -22,7 +22,7 @@ build-heroku-image:
 push-heroku-image:
 	docker push registry.heroku.com/flat-box/web
 
-destroy-heroku-app
+destroy-heroku-app:
 	heroku apps:destroy flat-box
 
 deploy: build-heroku-image push-heroku-image
