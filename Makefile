@@ -1,4 +1,4 @@
-.PHONY:build shell test clean run create-app push
+.PHONY:build shell test clean run create-heroku-app destroy-heroku-app deploy
 build:
 	docker-compose build
 
