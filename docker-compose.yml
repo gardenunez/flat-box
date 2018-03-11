@@ -11,6 +11,6 @@ services:
       - ./webapp:/opt/webapp
   db:
     image: postgres:latest
-    volumes:
-      - ./db_scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+#    volumes:
+#      - ./db_scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
     env_file: .env
