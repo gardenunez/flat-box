@@ -13,7 +13,7 @@ RUN pip install -r /requirements.txt
 ENV PYTHONPATH=/code
 WORKDIR /code
 
-ENV PYTHONPATH=/code
-WORKDIR /code
+# Run the image as a non-root user
+USER flat-box
 
-CMD gunicorn --bind 0.0.0.0:5000 server
+CMD gunicorn --bind 0.0.0.0:$PORT server
