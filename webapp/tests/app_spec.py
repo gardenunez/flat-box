@@ -1,12 +1,10 @@
 import json
 
+from db import PostgresDb
 from expects import expect, equal, have_len, have_keys, have_key
-
-from app import app
 from mamba import description, before, it
 
-from db import PostgresDb
-
+from app import app
 
 CONNECTION_STR = 'postgresql://postgres:postgres@db/flat_box'
 
