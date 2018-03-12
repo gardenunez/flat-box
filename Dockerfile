@@ -15,4 +15,4 @@ WORKDIR /opt/webapp
 RUN useradd -m flat-box
 USER flat-box
 
-CMD gunicorn --bind 0.0.0.0:$WEBAPP_PORT server
+CMD gunicorn --bind 0.0.0.0:$PORT server
